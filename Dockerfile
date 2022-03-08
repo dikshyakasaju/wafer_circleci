@@ -16,5 +16,6 @@ RUN python3.7 -m pip install -r requirements.txt
 EXPOSE 5000
 EXPOSE 5005
 EXPOSE 4041
+EXPOSE 5678
 
 CMD ["python3.7", "main.py"]
