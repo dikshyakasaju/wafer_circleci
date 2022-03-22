@@ -16,12 +16,7 @@ class Raw_Data_validation:
 
     """
              This class shall be used for handling all the validation done on the Raw Training Data!!.
-
-             Written By: iNeuron Intelligence
-             Version: 1.0
-             Revisions: None
-
-             """
+    """
 
     def __init__(self,path):
         self.Batch_Directory = path
@@ -35,12 +30,7 @@ class Raw_Data_validation:
                         Description: This method extracts all the relevant information from the pre-defined "Schema" file.
                         Output: LengthOfDateStampInFile, LengthOfTimeStampInFile, column_names, Number of Columns
                         On Failure: Raise ValueError,KeyError,Exception
-
-                         Written By: iNeuron Intelligence
-                        Version: 1.0
-                        Revisions: None
-
-                                """
+        """
         try:
             with open(self.schema_path, 'r') as f:
                 dic = json.load(f)
@@ -87,13 +77,8 @@ class Raw_Data_validation:
                                             This Regex is used to validate the filename of the training data.
                                 Output: Regex pattern
                                 On Failure: None
-
-                                 Written By: iNeuron Intelligence
-                                Version: 1.0
-                                Revisions: None
-
-                                        """
-        regex = "['wafer']+['\_'']+[\d_]+[\d]+\.csv"
+        """
+        regex = "wafer\d{8}_\d{6}.csv"
         return regex
 
     def createDirectoryForGoodBadRawData(self):
@@ -102,15 +87,7 @@ class Raw_Data_validation:
                                       Method Name: createDirectoryForGoodBadRawData
                                       Description: This method creates directories to store the Good Data and Bad Data
                                                     after validating the training data.
-
-                                      Output: None
-                                      On Failure: OSError
-
-                                       Written By: iNeuron Intelligence
-                                      Version: 1.0
-                                      Revisions: None
-
-                                              """
+        """
 
         try:
             path = os.path.join("Training_Raw_files_validated/", "Good_Raw/")
@@ -135,12 +112,7 @@ class Raw_Data_validation:
                                                           loaded in the DB,deleting the directory ensures space optimization.
                                             Output: None
                                             On Failure: OSError
-
-                                             Written By: iNeuron Intelligence
-                                            Version: 1.0
-                                            Revisions: None
-
-                                                    """
+        """
 
         try:
             path = 'Training_Raw_files_validated/'
@@ -165,12 +137,7 @@ class Raw_Data_validation:
                                             Description: This method deletes the directory made to store the bad Data.
                                             Output: None
                                             On Failure: OSError
-
-                                             Written By: iNeuron Intelligence
-                                            Version: 1.0
-                                            Revisions: None
-
-                                                    """
+        """
 
         try:
             path = 'Training_Raw_files_validated/'
@@ -194,12 +161,7 @@ class Raw_Data_validation:
                                                           files to send them back to the client for invalid data issue.
                                             Output: None
                                             On Failure: OSError
-
-                                             Written By: iNeuron Intelligence
-                                            Version: 1.0
-                                            Revisions: None
-
-                                                    """
+        """
         now = datetime.now()
         date = now.date()
         time = now.strftime("%H%M%S")
@@ -233,7 +195,7 @@ class Raw_Data_validation:
 
 
 
-    def validationFileNameRaw(self,regex,LengthOfDateStampInFile,LengthOfTimeStampInFile):
+    def validationFileNameRaw(self,regex):
         """
                     Method Name: validationFileNameRaw
                     Description: This function validates the name of the training csv files as per given name in the schema!
@@ -241,12 +203,7 @@ class Raw_Data_validation:
                                  to Bad Raw Data folder else in Good raw data.
                     Output: None
                     On Failure: Exception
-
-                     Written By: iNeuron Intelligence
-                    Version: 1.0
-                    Revisions: None
-
-                """
+        """
 
         #pattern = "['Wafer']+['\_'']+[\d_]+[\d]+\.csv"
         # delete the directories for good and bad data in case last run was unsuccessful and folders were not deleted.
@@ -259,19 +216,8 @@ class Raw_Data_validation:
             f = open("Training_Logs/nameValidationLog.txt", 'a+')
             for filename in onlyfiles:
                 if (re.match(regex, filename)):
-                    splitAtDot = re.split('.csv', filename)
-                    splitAtDot = (re.split('_', splitAtDot[0]))
-                    if len(splitAtDot[1]) == LengthOfDateStampInFile:
-                        if len(splitAtDot[2]) == LengthOfTimeStampInFile:
-                            shutil.copy("Training_Batch_Files/" + filename, "Training_Raw_files_validated/Good_Raw")
-                            self.logger.log(f,"Valid File name!! File moved to GoodRaw Folder :: %s" % filename)
-
-                        else:
-                            shutil.copy("Training_Batch_Files/" + filename, "Training_Raw_files_validated/Bad_Raw")
-                            self.logger.log(f,"Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
-                    else:
-                        shutil.copy("Training_Batch_Files/" + filename, "Training_Raw_files_validated/Bad_Raw")
-                        self.logger.log(f,"Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
+                    shutil.copy("Training_Batch_Files/" + filename, "Training_Raw_files_validated/Good_Raw")
+                    self.logger.log(f,"Valid File name!! File moved to GoodRaw Folder :: %s" % filename)
                 else:
                     shutil.copy("Training_Batch_Files/" + filename, "Training_Raw_files_validated/Bad_Raw")
                     self.logger.log(f, "Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
@@ -291,18 +237,13 @@ class Raw_Data_validation:
         """
                           Method Name: validateColumnLength
                           Description: This function validates the number of columns in the csv files.
-                                       It is should be same as given in the schema file.
+                                       It should be same as given in the schema file.
                                        If not same file is not suitable for processing and thus is moved to Bad Raw Data folder.
                                        If the column number matches, file is kept in Good Raw Data for processing.
                                       The csv file is missing the first column name, this function changes the missing name to "Wafer".
                           Output: None
                           On Failure: Exception
-
-                           Written By: iNeuron Intelligence
-                          Version: 1.0
-                          Revisions: None
-
-                      """
+        """
         try:
             f = open("Training_Logs/columnValidationLog.txt", 'a+')
             self.logger.log(f,"Column Length Validation Started!!")
@@ -334,12 +275,7 @@ class Raw_Data_validation:
                                                SUch files are moved to bad raw data.
                                   Output: None
                                   On Failure: Exception
-
-                                   Written By: iNeuron Intelligence
-                                  Version: 1.0
-                                  Revisions: None
-
-                              """
+        """
         try:
             f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
             self.logger.log(f,"Missing Values Validation Started!!")

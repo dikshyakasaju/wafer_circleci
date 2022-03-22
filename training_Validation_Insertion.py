@@ -20,7 +20,7 @@ class train_validation:
             # getting the regex defined to validate filename
             regex = self.raw_data.manualRegexCreation()
             # validating filename of prediction files
-            self.raw_data.validationFileNameRaw(regex, LengthOfDateStampInFile, LengthOfTimeStampInFile)
+            self.raw_data.validationFileNameRaw(regex)
             # validating column length in the file
             self.raw_data.validateColumnLength(noofcolumns)
             # validating if any column has all values missing

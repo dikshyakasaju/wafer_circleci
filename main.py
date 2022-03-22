@@ -40,8 +40,10 @@ def predictRouteClient():
 
             # predicting for dataset present in database
             path, json_predictions = pred.predictionFromModel()
+
             return Response("Prediction File created at !!!" + str(path) + 'and few of the predictions are ' + str(
                 json.loads(json_predictions)))
+
         elif request.form is not None:
             path = request.form['filepath']
 
@@ -55,6 +57,7 @@ def predictRouteClient():
             path, json_predictions = pred.predictionFromModel()
             return Response("Prediction File created at !!!" + str(path) + 'and few of the predictions are ' + str(
                 json.loads(json_predictions)))
+
         else:
             print('Nothing Matched')
     except ValueError:
@@ -100,6 +103,7 @@ def trainRouteClient():
 port = int(os.getenv("PORT", 80))
 if __name__ == "__main__":
     host = '0.0.0.0'
+    print(port)
     httpd = simple_server.make_server(host=host, app=app, port=port)
     # # print("Serving on %s %d" % (host, port))
     httpd.serve_forever()
